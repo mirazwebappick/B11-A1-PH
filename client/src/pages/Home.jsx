@@ -1,9 +1,15 @@
 import React from "react";
+import Slider from "../components/Slider";
+import FeatureGarden from "../components/FeatureGarden";
 
+const gardenPromises = fetch("http://localhost:3000/garden").then((res) =>
+  res.json()
+);
 const Home = () => {
   return (
     <div>
-      <h2>Home</h2>
+      <Slider />
+      <FeatureGarden gardenPromises={gardenPromises} />
     </div>
   );
 };
