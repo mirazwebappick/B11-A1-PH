@@ -1,6 +1,6 @@
 const express = require("express");
 const cors = require("cors");
-const { MongoClient, ServerApiVersion } = require("mongodb");
+const { MongoClient, ServerApiVersion, ObjectId } = require("mongodb");
 const port = process.env.PORT || 3000;
 require("dotenv").config();
 
@@ -26,8 +26,9 @@ async function run() {
   try {
     await client.connect();
 
-    const gardenDB = client.db("gardenDB");
-    const gardenCollection = gardenDB.collection("garden");
+    const gardenCollection = client.db("gardenDB").collection("garden");
+    const shareTips = client.db("gardenDB").collection("shareTips");
+    const user = client.db("gardenDB").collection("user");
 
     app.get("/garden", async (req, res) => {
       const gardenData = await gardenCollection
@@ -35,6 +36,44 @@ async function run() {
         .limit(6)
         .toArray();
       res.send(gardenData);
+    });
+
+    app.get("/my_tips/:email", async (req, res) => {
+      const email = req.params.email;
+      const result = await shareTips.find({ email }).toArray();
+      res.send(result);
+    });
+
+    app.get("/share_garden_tip", async (req, res) => {
+      const result = await shareTips.find().toArray();
+      res.send(result);
+    });
+
+    app.get("/share_garden_tip/public", async (req, res) => {
+      const sharePublicTips = await shareTips
+        .find({ availability: "Public" })
+        .toArray();
+      res.send(sharePublicTips);
+    });
+
+    app.get("/share_garden_tip/public/:id", async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) };
+      const result = await shareTips.findOne(query);
+      res.send(result);
+    });
+
+    app.post("/user", async (req, res) => {
+      const getUser = req.body;
+      const result = await user.insertOne(getUser);
+      res.send(result);
+    });
+
+    app.post("/share_garden_tip", async (req, res) => {
+      const getData = req.body;
+      const result = await shareTips.insertOne(getData);
+      res.send(result);
+      console.log(getData);
     });
 
     await client.db("admin").command({ ping: 1 });

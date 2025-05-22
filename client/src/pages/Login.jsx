@@ -1,13 +1,46 @@
 import React from "react";
 import { use } from "react";
 import { FcGoogle } from "react-icons/fc";
-import { Link } from "react-router";
+import { Link, useLocation, useNavigate } from "react-router";
 import { AuthContext } from "../context/AuthContext";
+import toast from "react-hot-toast";
 
 const Login = () => {
-  const { name } = use(AuthContext);
+  const { signInUser, continueWithGoogle } = use(AuthContext);
+  const navigate = useNavigate();
+  const { state } = useLocation();
+
   const handleLogin = (e) => {
     e.preventDefault();
+    const form = e.target;
+    const formData = new FormData(form);
+    const { email, password } = Object.fromEntries(formData.entries());
+    signInUser(email, password)
+      .then((result) => {
+        console.log(result);
+        toast.success("Logged Successful");
+        navigate(state || "/");
+        form.reset();
+      })
+      .catch((error) => {
+        if (error.code === "auth/invalid-credential") {
+          toast.error(
+            <div className="flex flex-col">
+              <h2>Wrong credential!</h2>
+              <h3>Check your Email or Password</h3>
+            </div>
+          );
+          return;
+        }
+        console.log("wrong credential!", error);
+      });
+  };
+
+  const handleAddByGoogle = () => {
+    continueWithGoogle().then(() => {
+      toast.success("Logged Successful by Google");
+      navigate(state || "/");
+    });
   };
   return (
     <div className="flex justify-center items-center min-h-screen  px-4">
@@ -53,7 +86,10 @@ const Login = () => {
             </button>
           </form>
 
-          <button className="py-2 font-semibold cursor-pointer border bg-white w-full mt-2 rounded-md flex items-center justify-center gap-2 hover:bg-green-600 hover:text-white hover:border-transparent transition border-green-600">
+          <button
+            onClick={handleAddByGoogle}
+            className="py-2 font-semibold cursor-pointer border bg-white w-full mt-2 rounded-md flex items-center justify-center gap-2 hover:bg-green-600 hover:text-white hover:border-transparent transition border-green-600"
+          >
             <FcGoogle size={20} />
             <span className="text-sm font-medium">Continue with Google</span>
           </button>

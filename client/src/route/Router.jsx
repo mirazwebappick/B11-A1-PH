@@ -7,6 +7,9 @@ import BrowseTips from "../pages/BrowseTips ";
 import MyTips from "../pages/MyTips";
 import Register from "../pages/Register";
 import Login from "../pages/Login";
+import ShareGardenTip from "../pages/ShareGardenTip";
+import TipDetails from "../pages/TipDetails";
+import PrivateRouter from "../Private/PrivateRouter";
 
 const router = createBrowserRouter([
   {
@@ -23,14 +26,26 @@ const router = createBrowserRouter([
       },
       {
         path: "/browse-tips",
+        loader: () => fetch("http://localhost:3000/share_garden_tip/public"),
         Component: BrowseTips,
       },
       {
         path: "/share-garden-tip",
+        element: (
+          <PrivateRouter>
+            <ShareGardenTip />
+          </PrivateRouter>
+        ),
       },
       {
-        path: "/my-tips",
-        Component: MyTips,
+        path: "/my-tips/:email",
+        loader: ({ params }) =>
+          fetch(`http://localhost:3000/my_tips/${params.email}`),
+        element: (
+          <PrivateRouter>
+            <MyTips />
+          </PrivateRouter>
+        ),
       },
       {
         path: "/register",
@@ -39,6 +54,16 @@ const router = createBrowserRouter([
       {
         path: "/login",
         Component: Login,
+      },
+      {
+        path: "/tip_details/:id",
+        loader: ({ params }) =>
+          fetch(`http://localhost:3000/share_garden_tip/public/${params.id}`),
+        element: (
+          <PrivateRouter>
+            <TipDetails />
+          </PrivateRouter>
+        ),
       },
     ],
   },

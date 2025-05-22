@@ -1,12 +1,11 @@
 import { Link, useNavigate } from "react-router";
 import { FcGoogle } from "react-icons/fc";
-import { useState } from "react";
 import { use } from "react";
 import { AuthContext } from "../context/AuthContext";
 import toast from "react-hot-toast";
 
 const Register = () => {
-  const { createUser, continueWithGoogle } = use(AuthContext);
+  const { createUser, continueWithGoogle, updateUser } = use(AuthContext);
 
   const navigate = useNavigate();
 
@@ -14,7 +13,7 @@ const Register = () => {
     e.preventDefault();
     const form = e.target;
     const formData = new FormData(form);
-    const { email, password, ...restFormData } = Object.fromEntries(
+    const { email, password, name, photo } = Object.fromEntries(
       formData.entries()
     );
 
@@ -48,10 +47,28 @@ const Register = () => {
       .then((data) => {
         console.log("User Created Successful", data);
         toast.success("User Created Successfully!");
+        form.reset();
+        navigate("/");
+        updateUser({ displayName: name, photoURL: photo })
+          .then((result) => {
+            console.log("User updated successful", result);
+            fetch("http://localhost:3000/user", {
+              method: "POST",
+              headers: {
+                "content-type": "application/json",
+              },
+              body: JSON.stringify({ email, name, photo }),
+            })
+              .then((res) => res.json())
+              .then((result) => {
+                console.log("user data after database", result);
+              });
+          })
+          .cath((error) => console.log("user Updated Error", error));
       })
       .catch((error) => {
         if (error.code === "auth/email-already-in-use") {
-          setError("Email already used!");
+          toast.error("Email already used!");
           return;
         }
       });
@@ -59,7 +76,8 @@ const Register = () => {
 
   const handleAddByGoogle = () => {
     continueWithGoogle()
-      .then((data) => {
+      .then(() => {
+        toast.success("Logged Successful by Google");
         navigate("/");
       })
       .catch((error) => {
