@@ -30,7 +30,10 @@ async function run() {
     const gardenCollection = gardenDB.collection("garden");
 
     app.get("/garden", async (req, res) => {
-      const gardenData = await gardenCollection.find().toArray();
+      const gardenData = await gardenCollection
+        .find({ status: "active" })
+        .limit(6)
+        .toArray();
       res.send(gardenData);
     });
 

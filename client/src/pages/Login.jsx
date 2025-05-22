@@ -1,8 +1,11 @@
 import React from "react";
+import { use } from "react";
 import { FcGoogle } from "react-icons/fc";
 import { Link } from "react-router";
+import { AuthContext } from "../context/AuthContext";
 
 const Login = () => {
+  const { name } = use(AuthContext);
   const handleLogin = (e) => {
     e.preventDefault();
   };
