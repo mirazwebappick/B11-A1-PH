@@ -1,20 +1,42 @@
-import { useLoaderData, useLocation, useNavigate } from "react-router";
+import { useLoaderData, useNavigate } from "react-router";
+import { useState } from "react";
 
 const BrowseTips = () => {
   const publicTipsData = useLoaderData();
   const navigate = useNavigate();
-  const param = useLocation();
-  console.log(param);
+
+  const [selectedDifficulty, setSelectedDifficulty] = useState("");
 
   const goToDetails = (id) => {
     navigate(`/tip_details/${id}`);
   };
+
+  const filteredTips = selectedDifficulty
+    ? publicTipsData.filter((tip) => tip.difficulty === selectedDifficulty)
+    : publicTipsData;
 
   return (
     <div className="p-6 max-w-6xl mx-auto">
       <h2 className="text-3xl font-bold mb-6 text-green-700 text-center">
         🌱 Browse Public Garden Tips
       </h2>
+
+      {/* Difficulty Filter Dropdown */}
+      <div className="mb-6 text-right">
+        <label className="mr-2 text-sm font-medium text-gray-700">
+          Filter by Difficulty:
+        </label>
+        <select
+          value={selectedDifficulty}
+          onChange={(e) => setSelectedDifficulty(e.target.value)}
+          className="border border-gray-300 px-3 py-2 rounded-md shadow-sm focus:ring-green-500 focus:border-green-500 text-sm"
+        >
+          <option value="">All</option>
+          <option value="Easy">Easy</option>
+          <option value="Medium">Medium</option>
+          <option value="Hard">Hard</option>
+        </select>
+      </div>
 
       <div className="overflow-x-auto rounded-lg shadow-md">
         <table className="min-w-full bg-white border border-gray-200">
@@ -27,7 +49,7 @@ const BrowseTips = () => {
             </tr>
           </thead>
           <tbody>
-            {publicTipsData.map((tip) => (
+            {filteredTips.map((tip) => (
               <tr
                 key={tip._id}
                 className="hover:bg-green-50 transition-all border-b"
@@ -44,7 +66,7 @@ const BrowseTips = () => {
                 <td className="p-4 text-center">
                   <button
                     onClick={() => goToDetails(tip._id)}
-                    className="cursor-pointer inline-flex items-center gap-2 px-4 py-2 text-sm text-white bg-green-600 hover:bg-green-700 rounded-lg transition duration-300"
+                    className="inline-flex items-center gap-2 px-4 py-2 text-sm text-white bg-green-600 hover:bg-green-700 rounded-lg transition duration-300"
                   >
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
@@ -59,10 +81,10 @@ const BrowseTips = () => {
                 </td>
               </tr>
             ))}
-            {publicTipsData.length === 0 && (
+            {filteredTips.length === 0 && (
               <tr>
                 <td colSpan="4" className="text-center py-8 text-gray-500">
-                  No public tips found.
+                  No tips match the selected difficulty.
                 </td>
               </tr>
             )}

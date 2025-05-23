@@ -10,6 +10,8 @@ import Login from "../pages/Login";
 import ShareGardenTip from "../pages/ShareGardenTip";
 import TipDetails from "../pages/TipDetails";
 import PrivateRouter from "../Private/PrivateRouter";
+import UpdateTip from "../pages/UpdateTip";
+import Error from "../pages/Error";
 
 const router = createBrowserRouter([
   {
@@ -23,6 +25,7 @@ const router = createBrowserRouter([
       {
         path: "/explore-garden",
         Component: ExploreGarden,
+        loader: () => fetch("http://localhost:3000/gardeners"),
       },
       {
         path: "/browse-tips",
@@ -40,7 +43,7 @@ const router = createBrowserRouter([
       {
         path: "/my-tips/:email",
         loader: ({ params }) =>
-          fetch(`http://localhost:3000/my_tips/${params.email}`),
+          fetch(`http://localhost:3000/my-tips/${params.email}`),
         element: (
           <PrivateRouter>
             <MyTips />
@@ -65,7 +68,17 @@ const router = createBrowserRouter([
           </PrivateRouter>
         ),
       },
+      {
+        path: "/update_tip/:id",
+        loader: ({ params }) =>
+          fetch(`http://localhost:3000/my_tips/${params.id}`),
+        Component: UpdateTip,
+      },
     ],
+  },
+  {
+    path: "*",
+    Component: Error,
   },
 ]);
 

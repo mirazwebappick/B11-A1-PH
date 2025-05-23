@@ -38,7 +38,24 @@ async function run() {
       res.send(gardenData);
     });
 
-    app.get("/my_tips/:email", async (req, res) => {
+    app.get("/gardeners", async (req, res) => {
+      const result = await gardenCollection.find().toArray();
+      res.send(result);
+    });
+
+    app.get("/my_tips", async (req, res) => {
+      const result = await shareTips.find().toArray();
+      res.send(result);
+    });
+
+    app.get("/my_tips/:id", async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) };
+      const result = await shareTips.findOne(query);
+      res.send(result);
+    });
+
+    app.get("/my-tips/:email", async (req, res) => {
       const email = req.params.email;
       const result = await shareTips.find({ email }).toArray();
       res.send(result);
@@ -74,6 +91,27 @@ async function run() {
       const result = await shareTips.insertOne(getData);
       res.send(result);
       console.log(getData);
+    });
+
+    app.delete("/my_tips/:id", async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) };
+      const result = await shareTips.deleteOne(query);
+      res.send(result);
+    });
+
+    app.put("/update_tip/:id", async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) };
+      const updateTip = req.body;
+      const option = { upsert: true };
+      const updateDoc = {
+        $set: {
+          updateTip,
+        },
+      };
+      const result = await shareTips.updateOne(query, updateDoc, option);
+      res.send(result);
     });
 
     await client.db("admin").command({ ping: 1 });
