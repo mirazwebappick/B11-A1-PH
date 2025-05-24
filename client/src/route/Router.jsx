@@ -29,7 +29,6 @@ const router = createBrowserRouter([
       },
       {
         path: "/browse-tips",
-        loader: () => fetch("http://localhost:3000/share_garden_tip/public"),
         Component: BrowseTips,
       },
       {

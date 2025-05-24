@@ -43,6 +43,18 @@ async function run() {
       res.send(result);
     });
 
+    app.get("/difficulty/:status", async (req, res) => {
+      const status = req.params.status;
+      let difficulty = {};
+      if (status != "all") {
+        difficulty.difficulty = status;
+      } else {
+        difficulty = {};
+      }
+      const result = await shareTips.find(difficulty).toArray();
+      res.send(result);
+    });
+
     app.get("/my_tips", async (req, res) => {
       const result = await shareTips.find().toArray();
       res.send(result);

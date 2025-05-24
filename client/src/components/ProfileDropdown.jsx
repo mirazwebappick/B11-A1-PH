@@ -27,7 +27,6 @@ const ProfileDropdown = ({ user, logOut }) => {
     });
   };
 
-  // Close dropdown on outside click
   useEffect(() => {
     const handleClickOutside = (e) => {
       if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {

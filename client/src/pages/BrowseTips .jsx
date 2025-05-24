@@ -1,37 +1,45 @@
-import { useLoaderData, useNavigate } from "react-router";
-import { useState } from "react";
+import { useNavigate } from "react-router";
+import { useEffect, useState } from "react";
+import { Fade } from "react-awesome-reveal";
 
 const BrowseTips = () => {
-  const publicTipsData = useLoaderData();
   const navigate = useNavigate();
+  const [value, setValue] = useState("all");
 
-  const [selectedDifficulty, setSelectedDifficulty] = useState("");
+  const [selectedTip, setSelectedTip] = useState();
 
   const goToDetails = (id) => {
     navigate(`/tip_details/${id}`);
   };
 
-  const filteredTips = selectedDifficulty
-    ? publicTipsData.filter((tip) => tip.difficulty === selectedDifficulty)
-    : publicTipsData;
+  const handleStatusChange = (e) => {
+    setValue(e.target.value);
+  };
 
+  useEffect(() => {
+    fetch(`http://localhost:3000/difficulty/${value}`)
+      .then((res) => res.json())
+      .then((result) => {
+        setSelectedTip(result);
+      });
+  }, [value]);
   return (
     <div className="p-6 max-w-6xl mx-auto">
       <h2 className="text-3xl font-bold mb-6 text-green-700 text-center">
-        🌱 Browse Public Garden Tips
+        <Fade delay={1e3} cascade damping={1e-1}>
+          🌱 Browse Public Garden Tips
+        </Fade>
       </h2>
 
-      {/* Difficulty Filter Dropdown */}
       <div className="mb-6 text-right">
         <label className="mr-2 text-sm font-medium text-gray-700">
           Filter by Difficulty:
         </label>
         <select
-          value={selectedDifficulty}
-          onChange={(e) => setSelectedDifficulty(e.target.value)}
+          onChange={handleStatusChange}
           className="border border-gray-300 px-3 py-2 rounded-md shadow-sm focus:ring-green-500 focus:border-green-500 text-sm"
         >
-          <option value="">All</option>
+          <option value="all">All</option>
           <option value="Easy">Easy</option>
           <option value="Medium">Medium</option>
           <option value="Hard">Hard</option>
@@ -49,7 +57,7 @@ const BrowseTips = () => {
             </tr>
           </thead>
           <tbody>
-            {filteredTips.map((tip) => (
+            {selectedTip?.map((tip) => (
               <tr
                 key={tip._id}
                 className="hover:bg-green-50 transition-all border-b"
@@ -81,7 +89,7 @@ const BrowseTips = () => {
                 </td>
               </tr>
             ))}
-            {filteredTips.length === 0 && (
+            {selectedTip?.length === 0 && (
               <tr>
                 <td colSpan="4" className="text-center py-8 text-gray-500">
                   No tips match the selected difficulty.

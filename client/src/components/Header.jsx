@@ -3,7 +3,8 @@ import { NavLink } from "react-router";
 import ProfileDropdown from "./ProfileDropdown";
 import { AuthContext } from "../context/AuthContext";
 import { useContext, useState } from "react";
-import Switcher from "./Switcher";
+
+import { Typewriter } from "react-simple-typewriter";
 
 const Header = () => {
   const { user, logOut } = useContext(AuthContext);
