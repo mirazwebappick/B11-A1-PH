@@ -1,10 +1,12 @@
 import { use } from "react";
 import { AuthContext } from "../context/AuthContext";
 import toast from "react-hot-toast";
+import { useNavigate } from "react-router";
 
 const ShareGardenTip = () => {
   const { user } = use(AuthContext);
   const { email, displayName } = user;
+  const navigate = useNavigate();
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -24,6 +26,7 @@ const ShareGardenTip = () => {
         console.log("data push after database", result);
         if (result.insertedId) {
           toast.success(" Tips submitted successfully!");
+          navigate("/browse-tips");
         }
       });
   };

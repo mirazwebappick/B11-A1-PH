@@ -57,7 +57,6 @@ const UpdateTip = () => {
           🌿 Update Your Garden Tip
         </h2>
 
-        {/* Title */}
         <div>
           <label className="block text-sm font-medium text-gray-700">
             Title
@@ -71,7 +70,6 @@ const UpdateTip = () => {
           />
         </div>
 
-        {/* Plant Type */}
         <div>
           <label className="block text-sm font-medium text-gray-700">
             Plant Type / Topic
@@ -85,7 +83,6 @@ const UpdateTip = () => {
           />
         </div>
 
-        {/* Difficulty */}
         <div>
           <label className="block text-sm font-medium text-gray-700">
             Difficulty Level
@@ -103,7 +100,6 @@ const UpdateTip = () => {
           </select>
         </div>
 
-        {/* Description */}
         <div>
           <label className="block text-sm font-medium text-gray-700">
             Description
@@ -117,7 +113,6 @@ const UpdateTip = () => {
           ></textarea>
         </div>
 
-        {/* Image URL */}
         <div>
           <label className="block text-sm font-medium text-gray-700">
             Image URL
@@ -130,7 +125,6 @@ const UpdateTip = () => {
           />
         </div>
 
-        {/* Category */}
         <div>
           <label className="block text-sm font-medium text-gray-700">
             Category
@@ -149,7 +143,6 @@ const UpdateTip = () => {
           </select>
         </div>
 
-        {/* Availability */}
         <div>
           <label className="block text-sm font-medium text-gray-700">
             Availability
@@ -166,7 +159,6 @@ const UpdateTip = () => {
           </select>
         </div>
 
-        {/* Read-only User Info */}
         <div className="grid md:grid-cols-2 gap-4">
           <div>
             <label className="block text-sm font-medium text-gray-700">
@@ -194,7 +186,6 @@ const UpdateTip = () => {
           </div>
         </div>
 
-        {/* Submit Button */}
         <div className="pt-4">
           <button
             type="submit"

@@ -45,11 +45,9 @@ async function run() {
 
     app.get("/difficulty/:status", async (req, res) => {
       const status = req.params.status;
-      let difficulty = {};
-      if (status != "all") {
+      let difficulty = { availability: "Public" };
+      if (status !== "all") {
         difficulty.difficulty = status;
-      } else {
-        difficulty = {};
       }
       const result = await shareTips.find(difficulty).toArray();
       res.send(result);
@@ -118,9 +116,7 @@ async function run() {
       const updateTip = req.body;
       const option = { upsert: true };
       const updateDoc = {
-        $set: {
-          updateTip,
-        },
+        $set: updateTip,
       };
       const result = await shareTips.updateOne(query, updateDoc, option);
       res.send(result);
